@@ -1,0 +1,18 @@
+{
+  "name": "eco",
+  "description": "Máximo ahorro: modelos free en todos los sub-agentes. ~$0-3/mes. ATENCIÓN: rate limit 20 req/min en free.",
+  "agents": {
+    "test-planner": {
+      "model": "openrouter/meta-llama/llama-3.3-70b-instruct:free"
+    },
+    "test-explorer": {
+      "model": "openrouter/qwen/qwen3.5-9b"
+    },
+    "test-coder": {
+      "model": "openrouter/qwen/qwen3-coder:free"
+    },
+    "test-reviewer": {
+      "model": "openrouter/qwen/qwen3.5-9b"
+    }
+  }
+}

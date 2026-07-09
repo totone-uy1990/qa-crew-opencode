@@ -1,0 +1,18 @@
+{
+  "name": "full-power",
+  "description": "Calidad máxima para testing: modelos de pago en todos los sub-agentes. ~$10-15/mes.",
+  "agents": {
+    "test-planner": {
+      "model": "openrouter/qwen/qwen3.5-35b-a3b"
+    },
+    "test-explorer": {
+      "model": "openrouter/google/gemini-3.5-flash"
+    },
+    "test-coder": {
+      "model": "openrouter/qwen/qwen3-coder-next"
+    },
+    "test-reviewer": {
+      "model": "openrouter/google/gemini-3.5-flash"
+    }
+  }
+}

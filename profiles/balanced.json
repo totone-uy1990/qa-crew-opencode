@@ -1,0 +1,18 @@
+{
+  "name": "balanced",
+  "description": "Mix equilibrado: planificador pago, coder gratis, explorer y reviewer económicos. ~$5-8/mes.",
+  "agents": {
+    "test-planner": {
+      "model": "openrouter/qwen/qwen3.5-35b-a3b"
+    },
+    "test-explorer": {
+      "model": "openrouter/qwen/qwen3.5-9b"
+    },
+    "test-coder": {
+      "model": "openrouter/qwen/qwen3-coder:free"
+    },
+    "test-reviewer": {
+      "model": "openrouter/qwen/qwen3.5-9b"
+    }
+  }
+}
