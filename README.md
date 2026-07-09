@@ -74,14 +74,17 @@ Cambiá los LLM de los sub-agentes según necesites:
 ## 🏗️ Arquitectura
 
 ```
+Jira (user stories)
+  │  ↓ MCP Atlassian
+  ▼
 Tú (usuario)
-  │
+  │  ↓ texto / prompts
   ▼
 Orquestador (gentle-orchestrator)
   │  Coordina, delega, sintetiza
   │
   ├── 📋 test-planner ──── Plan de pruebas + casos (modelo de razonamiento)
-  ├── 🧪 test-explorer ─── Exploratory testing con Playwright (modelo rápido)
+  ├── 🧪 test-explorer ─── Exploratory testing con Playwright MCP (modelo rápido)
   ├── ✍️ test-coder ────── Convierte CPs a código Playwright (modelo de código)
   └── 🔍 test-reviewer ─── Revisa tests generados (modelo económico)
 ```
@@ -146,6 +149,51 @@ qa-crew-opencode/
 - **OpenCode** instalado y configurado con OpenRouter
 - **Node.js** >= 18
 - **Bash** (para el switch de perfiles)
+
+---
+
+## 🔌 MCP Servers
+
+Los sub-agentes usan MCP servers para funcionalidades específicas. Algunos son necesarios, otros opcionales.
+
+| MCP | Necesario para | ¿Viene configurado? |
+|---|---|---|
+| **Playwright MCP** | `test-explorer` (navegar apps) | En `~/.config/opencode/opencode.json` ✅ |
+| **Atlassian (Jira) MCP** | `test-planner` (leer user stories) | ⚠️ Requiere configuración |
+| **Engram** | Memoria opcional entre sesiones | En `~/.config/opencode/opencode.json` ✅ |
+| **Perplexity** | Búsqueda web (opcional) | En `~/.config/opencode/opencode.json` ✅ |
+
+### Configurar Atlassian MCP (Jira)
+
+El MCP oficial de Atlassian (Rovo MCP Server) permite leer issues, proyectos, sprints y comentarios de Jira. Está en `https://mcp.atlassian.com/v1/mcp/authv2` y usa autenticación OAuth 2.1.
+
+Agregalo a tu `opencode.json` global (`~/.config/opencode/opencode.json`) o al del proyecto:
+
+```json
+{
+  "mcp": {
+    "atlassian": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://mcp.atlassian.com/v1/mcp/authv2"
+    }
+  }
+}
+```
+
+> **Requisito:** Necesitás una cuenta de Atlassian con acceso a Jira Cloud.
+> **Autenticación:** Al iniciar, OpenCode abrirá el navegador para que te loguees con OAuth.
+> **Solo Jira Cloud:** El server oficial no soporta Jira Data Center / Server. Alternativas community existen si usás on-premise.
+
+Una vez configurado, el flujo sería:
+
+```
+Jira (Atlassian MCP) → Orquestador → test-planner
+  • Busca issue por key (PROY-123)
+  • Obtiene description + acceptance criteria
+  • Pasa el texto al test-planner
+  • test-planner genera plan de pruebas
+```
 
 ---
 
