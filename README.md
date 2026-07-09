@@ -1,6 +1,6 @@
 # QA Crew — Multi-Agent Testing para OpenCode
 
-**Proyecto Manhattan.** Sistema multi-agente para QA/testing automation construido sobre OpenCode. Cuatro sub-agentes especializados (planner, explorer, coder, reviewer) trabajan en equipo, cada uno con su propio LLM, contexto aislado, y skills basadas en metodologías de testing reconocidas (ISTQB, POM, SBTM, Right-BICEP).
+Sistema multi-agente para QA/testing automation construido sobre OpenCode. Cuatro sub-agentes especializados (planner, explorer, coder, reviewer) trabajan en equipo, cada uno con su propio LLM, contexto aislado, y skills basadas en metodologías de testing reconocidas (ISTQB, POM, SBTM, Right-BICEP).
 
 ---
 
@@ -244,7 +244,9 @@ Cada sub-agente:
 
 ## 🔧 Perfiles de Modelos
 
-Cambiá los LLM de los sub-agentes según necesites:
+Los sub-agentes usan distintos modelos LLM según el perfil activo. Hay dos formas de cambiar de perfil:
+
+### 1. Via script (offline)
 
 ```bash
 ./profiles/switch-profile.sh full-power    # 🚀 Modelos de pago (~$10-15/mes)
@@ -255,6 +257,16 @@ Cambiá los LLM de los sub-agentes según necesites:
 
 > **Importante**: reiniciá OpenCode después de cambiar de perfil.
 
+### 2. Via petición al orquestador (sin salir de OpenCode)
+
+El orquestador tiene una skill (`testing-profiles`) que ejecuta el `switch-profile.sh` por vos. Simplemente decile:
+
+> _"Cambiame al perfil eco"_
+> _"Switch to full-power mode"_
+> _"Poneme el perfil balanced"_
+
+El orquestador llama al script, aplica el perfil, y te avisa que reinicies OpenCode.
+
 ### Asignación por perfil
 
 | Perfil | planner | explorer | coder | reviewer |
@@ -263,6 +275,14 @@ Cambiá los LLM de los sub-agentes según necesites:
 | **balanced** ⚖️ | qwen3.5-35b-a3b | qwen3.5-9b | qwen-coder:free | qwen3.5-9b |
 | **eco** 🌱 | llama-70b:free | qwen3.5-9b | qwen-coder:free | qwen3.5-9b |
 | **dev-local** 💻 | qwen3.5-9b | gemini-flash | qwen-coder-next | qwen3.5-9b |
+
+### Sobre proveedores
+
+La configuración actual usa **OpenRouter** como proveedor único. Los modelos en los perfiles se definen como `"proveedor/modelo"` (ej: `google/gemini-3.5-flash`, `qwen/qwen3.5-9b`) y OpenRouter resuelve el routing.
+
+**Si querés usar otro proveedor** (OpenAI directo, Anthropic, un LLM local con Ollama, etc.) hay que tocar el `opencode.json` global — específicamente la sección `"provider"` o agregar un segundo provider con sus API keys. El script `switch-profile.sh` solo cambia los modelos dentro del perfil actual, no la configuración de proveedores.
+
+> ⚠️ El script existe justamente para **no tener que editar el JSON a mano** cada vez que querés cambiar de modelos. Si solo trabajás con OpenRouter, usá los 4 perfiles y listo.
 
 ---
 
